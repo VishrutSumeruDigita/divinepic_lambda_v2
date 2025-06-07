@@ -1,0 +1,16 @@
+fastapi==0.104.1
+mangum==0.17.0
+transformers[torch]==4.21.1
+python-dotenv==1.1.0
+boto3==1.24.53
+numpy==1.24.3
+insightface==0.7.3
+python-multipart==0.0.6
+torch==2.6.0
+torchvision==0.21.0
+opencv-python-headless==4.8.1.78
+onnxruntime==1.16.3
+onnx==1.15.0
+pillow==10.0.1
+tqdm==4.66.1 
+elasticsearch==8.10.0
