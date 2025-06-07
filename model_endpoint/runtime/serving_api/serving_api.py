@@ -165,17 +165,22 @@ def get_face_model():
     """Get or initialize the face detection model (singleton pattern)."""
     global face_app
     if face_app is None:
-        DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-        logger.info(f"Using device: {DEVICE}")
+        logger.info("🔄 Loading face detection model...")
+        try:
+            DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+            logger.info(f"Using device: {DEVICE}")
 
-        face_app = FaceAnalysis(
-            name="antelopev2",
-            root="/app/models",
-            providers=["CPUExecutionProvider"] if DEVICE == "cpu" else ["CUDAExecutionProvider"]
-        )
-        face_app.prepare(ctx_id=0 if DEVICE == "cuda" else -1, det_thresh=0.35, det_size=(640, 640))
+            face_app = FaceAnalysis(
+                name="antelopev2",
+                root="/app/models",
+                providers=["CPUExecutionProvider"] if DEVICE == "cpu" else ["CUDAExecutionProvider"]
+            )
+            face_app.prepare(ctx_id=0 if DEVICE == "cuda" else -1, det_thresh=0.35, det_size=(640, 640))
 
-        logger.info("✅ antelopev2 model loaded successfully")
+            logger.info("✅ antelopev2 model loaded successfully")
+        except Exception as e:
+            logger.error(f"❌ Failed to load face model: {e}")
+            raise
     return face_app
 
 # ─── Process images in the background (generate embeddings and index to ES) ────
