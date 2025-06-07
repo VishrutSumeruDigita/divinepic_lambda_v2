@@ -25,7 +25,7 @@ class FastapiModelServingStack(Stack):
             ),
             timeout=Duration.seconds(900),  # 15 minutes for face processing
             ephemeral_storage_size=Size.mebibytes(10240),  # 10GB for models and temp files
-            memory_size=4096,  # 4GB for face detection models
+            memory_size=3008,  # 3008MB - Maximum allowed by Lambda
         )
 
         apigateway.LambdaRestApi(
