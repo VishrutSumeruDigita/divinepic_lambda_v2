@@ -2,7 +2,7 @@ FROM public.ecr.aws/lambda/python:3.10-x86_64
 
 # Install system dependencies
 RUN yum update -y && \
-    yum install -y wget unzip && \
+    yum install -y wget unzip gcc gcc-c++ cmake make && \
     yum clean all
 
 # Set environment variables for Lambda
@@ -35,6 +35,23 @@ RUN mkdir -p /tmp/uploads && \
 # Copy function code
 ADD serving_api.tar.gz ${LAMBDA_TASK_ROOT}
 
-RUN pip3 install -r requirements.txt --target ${LAMBDA_TASK_ROOT}
+# Install Python packages with specific strategies for ML libraries
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} fastapi==0.104.1 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} mangum==0.17.0 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} python-dotenv==1.0.1 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} boto3==1.24.53 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} python-multipart==0.0.6 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} pillow==10.0.1 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} tqdm==4.66.1 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} elasticsearch==8.10.0 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} transformers==4.36.0 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} --find-links https://download.pytorch.org/whl/torch_stable.html torch==2.1.0+cpu && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} --find-links https://download.pytorch.org/whl/torch_stable.html torchvision==0.16.0+cpu && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} numpy==1.24.3 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} opencv-python-headless==4.8.1.78 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} onnxruntime==1.16.3 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} onnx==1.15.0 && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} insightface==0.7.3
 
 CMD [ "serving_api.lambda_handler" ]
