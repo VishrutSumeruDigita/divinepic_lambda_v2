@@ -36,7 +36,9 @@ RUN mkdir -p /tmp/uploads && \
 ADD serving_api.tar.gz ${LAMBDA_TASK_ROOT}
 
 # Install Python packages with specific strategies for ML libraries
+# Install NumPy first to prevent version conflicts
 RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} "numpy>=1.24.3,<2.0" && \
     pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} fastapi==0.104.1 && \
     pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} mangum==0.17.0 && \
     pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} python-dotenv==1.0.1 && \
@@ -48,7 +50,6 @@ RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} transformers==4.36.0 && \
     pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} --find-links https://download.pytorch.org/whl/torch_stable.html torch==2.1.0+cpu && \
     pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} --find-links https://download.pytorch.org/whl/torch_stable.html torchvision==0.16.0+cpu && \
-    pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} "numpy<2.0" && \
     pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} opencv-python-headless==4.8.1.78 && \
     pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} onnxruntime==1.16.3 && \
     pip3 install --no-cache-dir --target ${LAMBDA_TASK_ROOT} onnx==1.15.0 && \
